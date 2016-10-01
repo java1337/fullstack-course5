@@ -12,7 +12,7 @@
     function NarrowItDownController(MenuSearchService) {
         var narrowItDownCtrl = this;
         narrowItDownCtrl.filterText = "";
-        narrowItDownCtrl.found = [];
+        narrowItDownCtrl.found = undefined;
 
         narrowItDownCtrl.findItems = function() {
             var matchedItemsPromise = MenuSearchService.getMatchedMenuItems(narrowItDownCtrl.filterText);
@@ -29,6 +29,13 @@
         var service = this;
 
         service.getMatchedMenuItems = function(searchTerm) {
+            var deferred = $q.defer();
+
+            var searchTermLc = searchTerm.toLowerCase().trim();
+            if (searchTermLc.length == 0) {
+                deferred.resolve([]);
+                return deferred.promise;
+            }
             var request = {
                 method: 'GET',
                 url: ServerBaseUrl,
@@ -38,7 +45,6 @@
                 data: { q: searchTerm }
             };
 
-            var deferred = $q.defer();
 
             $http(request).then(function (result) {
                 // process result and only keep items that match
