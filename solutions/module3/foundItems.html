@@ -1,0 +1,10 @@
+<div ng-if="ctrl.found && ctrl.found.length > 0">
+    <div class="alert alert-success">
+        <strong>Success!</strong> Narrowed menu down to {{ ctrl.found.length }} items!
+    </div>
+    <div class="row" ng-repeat="item in ctrl.found">
+        <span class="col-lg-4"><span class="bg-info">{{ item.short_name }}.</span><mark class="">{{ item.name }}</mark></span>
+        <span class="col-lg-7">{{ item.description }}</span>
+        <span class="col-lg-1"><button ng-click="ctrl.removeItem($index);" class="btn btn-danger btn-sm">Don&apos;t want this one!</button></span>
+    </div>
+</div>

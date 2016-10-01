@@ -13,14 +13,19 @@
         var narrowItDownCtrl = this;
         narrowItDownCtrl.filterText = "";
         narrowItDownCtrl.found = undefined;
+        narrowItDownCtrl.removedItems = [];
 
         narrowItDownCtrl.findItems = function() {
             var matchedItemsPromise = MenuSearchService.getMatchedMenuItems(narrowItDownCtrl.filterText);
             matchedItemsPromise.then(function(foundItems) {
-                console.log('filterText = ', narrowItDownCtrl.filterText);
-                console.log("foundItems = ", foundItems);
                 narrowItDownCtrl.found = foundItems;
+                narrowItDownCtrl.removedItems = [];
             });
+        };
+
+        narrowItDownCtrl.removeItem = function(itemIndex) {
+            console.log("removing item ", itemIndex);
+            narrowItDownCtrl.found.splice(itemIndex, 1);
         }
     }
 
@@ -54,7 +59,6 @@
                     deferred.resolve(items);
                 } else {
                     var filtered = items.filter(function (item) {
-                        console.log("desc = ", item.description);
                         return !item.description.toLowerCase().includes(searchTermLc);
                     });
                     deferred.resolve(filtered);
@@ -67,9 +71,16 @@
 
     function FoundItems() {
         var ddo = {
-            templateUrl : ''
+            templateUrl: 'foundItems.html',
+            restrict: 'E',
+            scope: {
+                found: '<',
+                onRemove: '&'
+            },
+            controller: NarrowItDownController,
+            controllerAs: 'ctrl',
+            bindToController: true
         };
-
         return ddo;
     }
 })();
